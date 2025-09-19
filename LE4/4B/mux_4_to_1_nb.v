@@ -20,6 +20,6 @@ module mux_4_to_1_nb #(parameter N = 4) 	(
 	assign Y = 	(S == 2'b00) ? A:
 					(S == 2'b01) ? B:
 					(S == 2'b10) ? C:
-					(S == 2'b11) ? D;
+										D; // S == 2'b11
 
 endmodule
