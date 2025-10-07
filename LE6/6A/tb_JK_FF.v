@@ -58,7 +58,5 @@ module tb_JK_FF ();
 	always @(negedge iClk)
 		#0.1 $display(" %3d |   %1b %1b %1b > %1b %1b", $time - 0.1, iReset, iJ, iK, oQ, oQ_bar);
 		
-//	initial
-//		$monitor(" %3d |   %1b %1b %1b $s %1b %1b", $time, iReset, iJ, iK, (iClk ? "|" : ">"), oQ, oQ_bar);
 endmodule
 	
