@@ -6,7 +6,7 @@
 //
 // Verilog HDL code for an n-bit ALU
 //
-module ALU_nb #(parameter N = 4) (
+module ALU_nb #(parameter N = 3) (
 	input wire [N-1: 0]	A, B,
 	input wire				CB_in,
 	input wire [2:0]		Mode,		

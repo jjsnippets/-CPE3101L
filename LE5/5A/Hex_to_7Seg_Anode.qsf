@@ -69,4 +69,17 @@ set_global_assignment -name EDA_TEST_BENCH_NAME tb_Hex_to_7Seg_Anode -section_id
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_Hex_to_7Seg_Anode
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_Hex_to_7Seg_Anode -section_id tb_Hex_to_7Seg_Anode
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_Hex_to_7Seg_Anode.v -section_id tb_Hex_to_7Seg_Anode
+set_location_assignment PIN_B12 -to DP
+set_location_assignment PIN_F15 -to Hex[3]
+set_location_assignment PIN_B14 -to Hex[2]
+set_location_assignment PIN_A14 -to Hex[1]
+set_location_assignment PIN_A13 -to Hex[0]
+set_location_assignment PIN_D15 -to SSeg[0]
+set_location_assignment PIN_C14 -to SSeg[7]
+set_location_assignment PIN_E15 -to SSeg[6]
+set_location_assignment PIN_C15 -to SSeg[5]
+set_location_assignment PIN_C16 -to SSeg[4]
+set_location_assignment PIN_E16 -to SSeg[3]
+set_location_assignment PIN_D17 -to SSeg[2]
+set_location_assignment PIN_C17 -to SSeg[1]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
