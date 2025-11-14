@@ -8,13 +8,12 @@
 // 
 `timescale 1 ns / 1 ps			
 module tb_JK_FF ();
-	reg	iJ, iK, iClk, iReset;
-	wire	oQ, oclk_div, oQ_bar;
+	reg	iJ, iK, iReset, iClk;
+	wire	oQ, oQ_bar, oclk_div;
 	
-	localparam div = 10;			// Divide simulation clock cycles by 10
-										// not 10,000,000 as it will take forever to fully simulate
+	localparam simOldHz = 10, simNewHz = 1, div = (simOldHz/simNewHz);	// 10x reduction in rate
 	
-	JK_FF #(div) UUT (iJ, iK, iReset, iClk, oQ, oclk_div, oQ_bar);
+	JK_FF #(simOldHz, simNewHz) UUT (iJ, iK, iReset, iClk, oQ, oQ_bar, oclk_div);
 	
 	// initial value for clock
 	initial
@@ -26,7 +25,7 @@ module tb_JK_FF ();
 	
 	// reset held high for a few clock cycles
 	initial begin
-		$display("time | rst J K | Q ~Q");
+		$display("time | rst ld en up   in |      out");
 		$display("Reset enabled");
 		iReset = 1'b1;		#(17*div)
 		$display("Reset disabled");

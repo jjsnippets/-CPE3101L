@@ -5,7 +5,7 @@
 
 //
 // Verilog HDL code for a Clock Divider Circuit
-// negative edge triggered, active high asyncronous reset
+// negative edge triggered, active low asyncronous reset
 //
 module Clock_Divider #(parameter oldHz = 50_000_000, newHz = 2)	( // Maximum clock cycle count to be divided by
 	input wire			Clock_in, nReset, Clk,
