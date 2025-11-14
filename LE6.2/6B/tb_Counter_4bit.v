@@ -13,10 +13,9 @@ module tb_Counter_4bit ();
 	wire [3:0]	oCount_out;
 	wire			oclk_div;
 
-	localparam div = 10;			// Divide simulation clock cycles by 10
-										// not 10,000,000 as it will take forever to fully simulate
+	localparam simOldHz = 10, simNewHz = 1, div = (simOldHz/simNewHz);	// 10x reduction in rate
 	
-	Counter_4bit #(div) UUT (iClk, inReset, iLoad, iCount_en, iUp, iCount_in, oCount_out, oclk_div);
+	Counter_4bit #(simOldHz, simNewHz) UUT (iClk, inReset, iLoad, iCount_en, iUp, iCount_in, oCount_out, oclk_div);
 
 	// initial value for clock
 	initial

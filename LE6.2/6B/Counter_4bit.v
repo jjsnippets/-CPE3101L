@@ -8,51 +8,21 @@
 // negative edge triggered, active low asyncronous reset
 //
 
-module Counter_4bit #(parameter cycle = 10_000_000)	( // Maximum clock cycle count to be divided by
+module Counter_4bit #(parameter oldHz = 50_000_000, newHz = 2)	(
 	input wire			Clk, nReset, Load, Count_en, Up,
 	input wire [3:0]	Count_in,
-	output reg [3:0]	Count_out, 
-	output reg 			clk_div										);
-											// new clock frequency of 1Hz
+	output reg [3:0]	Count_out,
+	output wire			div_clock											);
 	
-	//
-	// Clock divider logic
-	// Assuming that the input clock frequency is 10MHz
-	// and desired frequency is 1Hz
-	//
+	wire on;
+	assign on = 1;				// disable bypass functionality 
 	
-	// Counter
-	reg [22:0] cntr;		// (10,000,000 / 2) < 2^23
-	
-	// Comparator for half of the counter states
-	wire cmpr;
-	assign cmpr = (cntr == (cycle / 2) - 1);
-	
-	// Counter increment and reset logic
-	always @(posedge Clk, negedge nReset)
-	begin
-		if (!nReset)		// asyncronous reset
-			cntr <= 23'b0;
-		else if (cmpr)		// reset if counter reached half of the counter states
-			cntr <= 23'b0;
-		else					// increment by 1
-			cntr <= cntr + 1'b1;
-	end
-	
-	// new clock frequency generator
-	// 2 full comparator hits == 1 full period
-	always @(posedge Clk, negedge nReset)
-	begin
-		if (!nReset)
-			clk_div <= 1'b0;
-		else if (cmpr)
-			clk_div <= !clk_div;
-	end
+	Clock_Divider #(oldHz, newHz) CDiv (Clk, nReset, on, div_clock);
 	
 	//
 	// Counter logic
 	//
-	always @(negedge clk_div, negedge nReset)
+	always @(negedge div_clock, negedge nReset)
 	begin
 		if (!nReset)					// asyncronous reset
 			Count_out <= 4'b0000;
