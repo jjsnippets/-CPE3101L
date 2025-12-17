@@ -8,17 +8,17 @@
 // Negative edge triggered, active low syncronous reset
 //
 module Race_Lights #(parameter oldHz = 50_000_000, newHz = 1)   (
-    input wire          CLOCK, nRESET, START,
-    output reg [2:0]    lights, cstate, nstate,
-    output wire         new_clk                                 );
+    input wire          CLOCK, nRESET, START,       // Light assignments:
+    output reg [2:0]    lights,                     // RED    = lights[2]
+    output wire [2:0]   cstate, nstate,             // YELLOW = lights[1]
+    output wire         new_clk                 );  // GREEN  = lights[0]
     
-    // Light assignments:
-    // RED    = lights[2]
-    // YELLOW = lights[1]
-    // GREEN  = lights[0]
+    // Internal declaration for state machine viewer
+    reg [2:0]   CSTATE, NSTATE;
     
     // Divided clock signal
-    clkdiv_sync_low #(oldHz, newHz) (CLOCK, nRESET, new_clk);
+    clkdiv_negedge #(oldHz, newHz)
+        clk_div (CLOCK, new_clk);
 
     // State parmeters
     localparam A = 3'b000;
@@ -28,26 +28,26 @@ module Race_Lights #(parameter oldHz = 50_000_000, newHz = 1)   (
     localparam E = 3'b100;
     localparam F = 3'b101;
     localparam G = 3'b110;
-              
+    
     // State transistions
     always  @(negedge new_clk, negedge nRESET)
-        if (!nRESET)    cstate <= A;
-        else            cstate <= nstate;
+        if (!nRESET)    CSTATE <= A;
+        else            CSTATE <= NSTATE;
     
     // Next state transitions
     always @(*)
-        case (cstate)
-            A:          nstate <= (START) ? B : A;
-            B:          nstate <=           C    ;
-            C:          nstate <=           D    ;
-            D:          nstate <=           E    ;
-            E:          nstate <=           F    ;
-            default:    nstate <=           A    ;
+        case (CSTATE)
+            A:          NSTATE <= (START) ? B : A;
+            B:          NSTATE <=           C    ;
+            C:          NSTATE <=           D    ;
+            D:          NSTATE <=           E    ;
+            E:          NSTATE <=           F    ;
+            default:    NSTATE <=           A    ;
         endcase
     
     // Output assignments
     always @(*)
-        case (cstate)
+        case (CSTATE)
             A:          lights <= 3'b100;
             B:          lights <= 3'b100;
             C:          lights <= 3'b010;
@@ -56,5 +56,8 @@ module Race_Lights #(parameter oldHz = 50_000_000, newHz = 1)   (
             F:          lights <= 3'b001;
             default:    lights <= 3'b100;
         endcase
-
+    
+    assign cstate = CSTATE;
+    assign nstate = NSTATE;
+    
 endmodule

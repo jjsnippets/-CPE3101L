@@ -32,16 +32,16 @@ module tb_Complex_Counter();
         $display("Initialize to 0");
         inRESET = 1'b0; iM = 1'b0;  #(10*div)
         
-        $display("Count in binary");
+        $display("Count in Binary");
         inRESET = 1'b1;             #(50*div)
         
-        $display("Count in BCD");
+        $display("Count in Gray Code");
                         iM = 1'b1;  #(30*div)
                         
         $display("Reset count");
         inRESET = 1'b0;             #(10*div)           
         
-        $display("Continue counting in BCD");
+        $display("Continue counting in Gray Code");
         inRESET = 1'b1;             #(8*div)
         
         $display("Switch to Binary");
