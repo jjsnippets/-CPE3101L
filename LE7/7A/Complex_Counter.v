@@ -9,30 +9,38 @@
 //
 module Complex_Counter #(parameter oldHz = 50_000_000, newHz = 1)   ( 
     input wire          CLOCK, nRESET, M,
-    output reg [2:0]    COUNT, nstate,
+    output wire [2:0]   COUNT, NCOUNT,
     output wire         new_clk                                     );
     
-    // Divided clock signal
-    clkdiv_sync_low #(oldHz, newHz) (CLOCK, nRESET, new_clk);
+    // Internal declaration for state machine viewer
+    reg [2:0]   cstate, nstate;
     
-    // State transitions and output assignment
+    // Divided clock signal
+    clkdiv_negedge #(oldHz, newHz)
+        clk_div (CLOCK, new_clk);
+    
+    // State transitions
     always  @(negedge new_clk)
-        if (!nRESET)    COUNT <= 3'b000;
-        else            COUNT <= nstate;
+        if (!nRESET)    cstate <= 3'b000;
+        else            cstate <= nstate;
     
     // Next state assignments
     // M == 0: binary sequence
     // M == 1: gray code sequence
     always @(*)
-        case (COUNT)
+        case (cstate)
             3'b000:     nstate <=       3'b001         ;
             3'b001:     nstate <= (M) ? 3'b011 : 3'b010;
             3'b010:     nstate <= (M) ? 3'b110 : 3'b011;
             3'b011:     nstate <= (M) ? 3'b010 : 3'b100;
             3'b100:     nstate <= (M) ? 3'b000 : 3'b101;
             3'b101:     nstate <= (M) ? 3'b100 : 3'b110;
-            3'b110:     nstate <= (M) ? 3'b111 : 3'b111;
+            3'b110:     nstate <=       3'b111         ;
             default:    nstate <= (M) ? 3'b101 : 3'b000;
-        endcase   
-        
+        endcase
+    
+    // Output assignments
+    assign COUNT = cstate;
+    assign NCOUNT = nstate;
+    
 endmodule
